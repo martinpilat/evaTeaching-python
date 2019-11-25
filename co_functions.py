@@ -105,6 +105,18 @@ def make_f10_rotated_ellipsoidal(dim):
                              R = R, D = dim, i = i)
 
 
+def numerical_derivative(f, x):
+    fx = f(x).fitness
+    d = np.zeros_like(x)
+    for i in range(x.shape[0]):
+        xph = x.copy()
+        xph[i] += 0.0000001*x[i]
+        dx = xph[i] - x[i]
+        d[i] = (f(xph).fitness - fx)/dx
+    
+    return -d # the fitness is the negative of the function - need to take 
+              # negative again (to match the Java implementation)
+
 # bellow is commented code that shows how to use the functions and also can be 
 # used to create plots of the functions with 2 variables
 
