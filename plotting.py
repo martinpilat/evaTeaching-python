@@ -6,8 +6,6 @@ import utils
 import matplotlib.pyplot as plt 
 
 plt.figure(figsize=(12,8))
-utils.plot_experiments('continuous', ['default.f01', 'tuned.f01'], 
-                       rename_dict={'default.f01': 'Sphere (default)',
-                                    'tuned.f01': 'Sphere (tuned)'})
+utils.plot_experiments('rules', ['default'])
 plt.show()
  
