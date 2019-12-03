@@ -10,7 +10,7 @@ import numpy as np
 import utils
 
 POP_SIZE = 100 # population size
-MAX_GEN = 10 # maximum number of generations
+MAX_GEN = 50 # maximum number of generations
 CX_PROB = 0.8 # crossover probability
 MAX_RULES = 10 # maximum number of rules in an individual
 MUT_CLS_PROB = 0.2 # probability of class changing mutation
@@ -74,11 +74,11 @@ class Any:
 # conditions in the initial population
 def create_rule(num_attrs, num_classes, lb, ub):
     conditions = []
-    for _ in range(num_attrs):
+    for i in range(num_attrs):
         if random.random() < 0.25:
-            conditions.append(LessThen(random.random(), lb, ub))
+            conditions.append(LessThen(random.random(), lb[i], ub[i]))
         elif random.random() < 0.5:
-            conditions.append(GreaterThen(random.random(), lb, ub))
+            conditions.append(GreaterThen(random.random(), lb[i], ub[i]))
         else:
             conditions.append(Any())
     
@@ -87,7 +87,7 @@ def create_rule(num_attrs, num_classes, lb, ub):
 # creates the individual - list of rules
 def create_ind(max_rules, num_attrs, num_classes, lb, ub):
     ind_len = random.randrange(1, MAX_RULES)
-    return [create_rule(num_attrs, num_classes, l, u) for i, (l, u) in enumerate(zip(lb, ub))]
+    return [create_rule(num_attrs, num_classes, lb, ub) for i in range(ind_len)]
 
 # creates the population using the create individual function
 def create_pop(pop_size, create_individual):
@@ -179,7 +179,7 @@ def cond_mutate(p):
     o = copy.deepcopy(p)
     for r in o:
         for c in r.conditions:
-            c.params += np.random.randn(*c.params.shape)
+            c.params += MUT_COND_SIGMA*np.random.randn(*c.params.shape)
 
     return o
 
