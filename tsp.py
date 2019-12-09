@@ -221,7 +221,7 @@ if __name__ == '__main__':
 
     # print an overview of the best individuals from each run
     for i, bi in enumerate(best_inds):
-        print(f'Run {i}: difference = {fit(bi).objective}, bin weights = {bin_weights(weights, bi)}')
+        print(f'Run {i}: difference = {fit(bi).objective}')
 
     # write summary logs for the whole experiment
     utils.summarize_experiment(OUT_DIR, EXP_ID)
