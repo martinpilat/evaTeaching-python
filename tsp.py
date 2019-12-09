@@ -11,7 +11,7 @@ CX_PROB = 0.8 # crossover probability
 MUT_PROB = 0.2 # mutation probability
 MUT_MAX_LEN = 10 # maximum lenght of the swapped part
 REPEATS = 10 # number of runs of algorithm (should be at least 10)
-INPUT = 'inputs/tsp_europe.in' # the input file
+INPUT = 'inputs/tsp_std.in' # the input file
 OUT_DIR = 'tsp' # output directory for logs
 EXP_ID = 'default' # the ID of this experiment (used to create log names)
 
