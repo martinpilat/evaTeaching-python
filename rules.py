@@ -75,9 +75,10 @@ class Any:
 def create_rule(num_attrs, num_classes, lb, ub):
     conditions = []
     for i in range(num_attrs):
-        if random.random() < 0.25:
+        r = random.random()
+        if r < 0.25:
             conditions.append(LessThen(random.random(), lb[i], ub[i]))
-        elif random.random() < 0.5:
+        elif r < 0.5:
             conditions.append(GreaterThen(random.random(), lb[i], ub[i]))
         else:
             conditions.append(Any())
@@ -107,6 +108,9 @@ def classify_instance(ind, attrs):
         if v > best_votes:
             best_votes = v
             best_class = k
+
+    if best_class == None:
+        best_class = 0
 
     return best_class
 
@@ -250,7 +254,7 @@ def evolutionary_algorithm(pop, max_gen, fitness, operators, mate_sel, *, map_fn
 
         mating_pool = mate_sel(pop, fits, POP_SIZE)
         offspring = mate(mating_pool, operators)
-        pop = offspring[:]
+        pop = offspring[1:] + [pop[max(enumerate(fits), key=lambda x: x[1])[0]]]
 
     return pop
 
