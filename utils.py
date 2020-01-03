@@ -7,6 +7,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt 
 
+import multi_utils
+
 # a tuple of fitness value and objective value
 FitObjPair = namedtuple('FitObjPair', ['fitness', 'objective'])
 
@@ -145,6 +147,28 @@ class Log:
 
         self.fit_stats.append(fs)
         self.obj_stats.append(os)
+
+        if self.write_immediately:
+            with open(self.flog_name, 'a') as f:
+                f.write(f'{f_evals} {fs.max} {fs.mean} {fs.min}\n')
+            with open(self.olog_name, 'a') as f:
+                f.write(f'{f_evals} {os.max} {os.mean} {os.min}\n')
+        
+        if self.gen_num % self.print_frequency == 0:
+            print(f'{f_evals:8} {os.min:8.2f} {os.mean:8.2f} {os.max:8.2f}')
+
+    def add_multi_gen(self, pop, f_evals, opt_hv):
+        self.gen_num += 1
+        self.gens.append(None)
+        self.fevals.append(f_evals)
+
+        hv = multi_utils.hypervolume(pop)
+
+        os = GenStats(min=opt_hv - hv, max=opt_hv - hv, mean=opt_hv - hv)
+        fs = GenStats(min=hv, max=hv, mean=hv)
+
+        self.obj_stats.append(os)
+        self.fit_stats.append(fs)
 
         if self.write_immediately:
             with open(self.flog_name, 'a') as f:
