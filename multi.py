@@ -41,7 +41,7 @@ def tournament_selection_NSGA2(pop, k):
     for i in range(k):
         p1 = random.randrange(0, len(pop))
         p2 = random.randrange(0, len(pop))
-        if (pop[p1].front, pop[p1].ssc) < (pop[p2].front, pop[p2].ssc): # lexicographic comparison
+        if (pop[p1].front, -pop[p1].ssc) < (pop[p2].front, -pop[p2].ssc): # lexicographic comparison
             selected.append(copy.deepcopy(pop[p1]))
         else:
             selected.append(copy.deepcopy(pop[p2]))
@@ -144,6 +144,13 @@ def evolutionary_algorithm(pop, max_gen, fitness, operators, mate_sel, mutate_in
         evals += len(pop)
         if log:
             log.add_multi_gen(pop, evals, opt_hv)
+
+        if G == 0:
+            fronts = mu.divide_fronts(pop)
+            for i,f in enumerate(fronts):
+                mu.assign_crowding_distances(f)
+                for ind in f:
+                    ind.front = i
 
         mating_pool = mate_sel(pop, POP_SIZE)
         offspring = mate(mating_pool, operators)
