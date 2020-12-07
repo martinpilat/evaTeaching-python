@@ -137,23 +137,28 @@ def mutation(pop, mutate, mut_prob):
 #   log       - a utils.Log structure to log the evolution run
 def evolutionary_algorithm(pop, max_gen, fitness, operators, mate_sel, mutate_ind, *, map_fn=map, log=None, opt_hv = np.product(mu.HYP_REF)):
     evals = 0
-    for G in range(max_gen):
-        fits_objs = list(map_fn(fitness, pop))
-        for ind, fit in zip(pop, fits_objs):
-            ind.fitness = fit
-        evals += len(pop)
-        if log:
-            log.add_multi_gen(pop, evals, opt_hv)
+    for G in range(max_gen):        
 
         if G == 0:
+            fits_objs = list(map_fn(fitness, pop))
+            for ind, fit in zip(pop, fits_objs):
+                ind.fitness = fit
+            evals += len(pop)
             fronts = mu.divide_fronts(pop)
             for i,f in enumerate(fronts):
                 mu.assign_crowding_distances(f)
                 for ind in f:
                     ind.front = i
 
+        if log:
+            log.add_multi_gen(pop, evals, opt_hv)
+
         mating_pool = mate_sel(pop, POP_SIZE)
         offspring = mate(mating_pool, operators)
+        fits_objs = list(map_fn(fitness, offspring))
+        for ind, fit in zip(offspring, fits_objs):
+            ind.fitness = fit
+        evals += len(offspring)
         pop = nsga2_select(pop + offspring, POP_SIZE)
 
     return pop
