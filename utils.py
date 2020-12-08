@@ -68,7 +68,7 @@ def read_run_file(filename):
         for line in f.readlines():
             e, x, m, n = line.split(' ')
             evals.append(int(e))
-            stats.append(GenStats(min=float(n), max=float(x), mean=float(n)))
+            stats.append(GenStats(min=float(n), max=float(x), mean=float(m)))
 
     return evals, stats
 
