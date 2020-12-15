@@ -158,7 +158,7 @@ def cross(p1, p2):
    
     # individuals can have different lenghts
     l = min(len(p1), len(p2))
-    rest = o1[l:] + o2[l:]
+    rest = p1[l:] + p2[l:]
     for r in rest:
         if random.random() < 0.5:
             o1.append(copy.deepcopy(r))
