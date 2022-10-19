@@ -104,7 +104,7 @@ class Log:
     #   run_id - id of the run in the experiment
     #   write_immediately - whether to write the output files immediately 
     #                       or wait till the `write_file` method is called
-    #   print_frequency - how often to print the output to console
+    #   print_frequency - how often to print the output to console, 0 for silent
     #   remove_existing - whether to remove existing files for given combination
     #                     of exp_id and run_id (otherwise new values are 
     #                     appended)
@@ -154,7 +154,7 @@ class Log:
             with open(self.olog_name, 'a') as f:
                 f.write(f'{f_evals} {os.max} {os.mean} {os.min}\n')
         
-        if self.gen_num % self.print_frequency == 0:
+        if self.print_frequency != 0 and self.gen_num % self.print_frequency == 0:
             print(f'{f_evals:8} {os.min:8.2f} {os.mean:8.2f} {os.max:8.2f}')
 
     def add_multi_gen(self, pop, f_evals, opt_hv):
