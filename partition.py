@@ -4,12 +4,14 @@ import functools
 
 import utils
 
-K = 10 #number of piles
+K = 10 #number of bins
+
 POP_SIZE = 100 # population size
 MAX_GEN = 500 # maximum number of generations
 CX_PROB = 0.8 # crossover probability
 MUT_PROB = 0.2 # mutation probability
 MUT_FLIP_PROB = 0.1 # probability of chaninging value during mutation
+
 REPEATS = 10 # number of runs of algorithm (should be at least 10)
 OUT_DIR = 'partition' # output directory for logs
 EXP_ID = 'default' # the ID of this experiment (used to create log names)
@@ -103,7 +105,6 @@ def evolutionary_algorithm(pop, max_gen, fitness, operators, mate_sel, *, map_fn
         if log:
             log.add_gen(fits_objs, evals)
         fits = [f.fitness for f in fits_objs]
-        objs = [f.objective for f in fits_objs]
 
         mating_pool = mate_sel(pop, fits, POP_SIZE)
         offspring = mate(mating_pool, operators)
