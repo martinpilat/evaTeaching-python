@@ -6,6 +6,6 @@ import utils
 import matplotlib.pyplot as plt 
 
 plt.figure(figsize=(12,8))
-utils.plot_experiments('rules', ['default'])
+utils.plot_experiments(directory='partition', exp_ids=['default'])
 plt.show()
  

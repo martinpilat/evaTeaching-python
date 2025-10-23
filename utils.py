@@ -1,7 +1,7 @@
 from collections import namedtuple
 import os
-import glob
 import warnings
+import itertools
 
 import pandas as pd
 import numpy as np
@@ -31,11 +31,20 @@ def plot_experiment(evals, lower, mean, upper, legend_name=''):
 #               to use for the stats
 def get_experiment_stats(prefix, exp_id, stat_type='objective'):
     data = []
-    for fn in glob.glob(f'{prefix}/{exp_id}_*.{stat_type}'):
-        evals, stats = read_run_file(fn)
-        data.append(pd.Series([s.max for s in stats], index=evals))
+    for i in itertools.count(start=0):
+        fn = f'{prefix}/{exp_id}_{i}.{stat_type}'
+        if os.path.isfile(fn):
+            evals, stats = read_run_file(fn)
+            data.append(pd.Series([s.max for s in stats], index=evals))
+        else:
+            if i == 0:
+                raise RuntimeError(f'Found no runs for experiment id "{exp_id}"')
+            if i < 9:
+                warnings.warn(f'Found only {i} runs for experiment ID "{exp_id}"')
+            break
+
     data_frame = pd.DataFrame(data)
-    data_frame.fillna(method='ffill', inplace=True, axis=1)
+    data_frame.ffill(inplace=True, axis=1)
     return (data_frame.columns.values, np.min(data_frame, axis=0), 
             np.percentile(data_frame, q=25, axis=0), 
             np.mean(data_frame, axis=0), 
@@ -74,16 +83,18 @@ def read_run_file(filename):
 
 # plots a number of experiments
 # Arguments:
-#   prefix - directory with experimental results
+#   directory - directory with experimental results
 #   exp_ids - list of experiments to plot
 #   rename_dict - a mapping of exp_id -> legend name, can be used to rename 
 #                 entries in the plot legend
 #   stat_type - either 'objective' or 'fitness' - the type of values to plot
-def plot_experiments(prefix, exp_ids, rename_dict=None, stat_type='objective'):
+def plot_experiments(directory, exp_ids, rename_dict=None, stat_type='objective'):
+    if not os.path.isdir(directory):
+        raise RuntimeError(f'Specified directory "{directory}" not found')
     if not rename_dict:
         rename_dict = dict()
     for e in exp_ids:
-        evals, lower, mean, upper = get_plot_data(prefix, e, stat_type)
+        evals, lower, mean, upper = get_plot_data(directory, e, stat_type)
         plot_experiment(evals, lower, mean, upper, rename_dict.get(e, e))
     plt.legend()
     plt.xlabel('Fitness evaluations')
