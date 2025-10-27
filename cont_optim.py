@@ -13,7 +13,7 @@ MUT_PROB = 0.2 # mutation probability
 MUT_STEP = 0.5 # size of the mutation steps
 REPEATS = 10 # number of runs of algorithm (should be at least 10)
 OUT_DIR = 'continuous' # output directory for logs
-EXP_ID = 'default' # the ID of this experiment (used to create log names)
+EXP_ID = 'default' # the ID of this experiment (used to create log names), the actual ID will also contain ".<name of function>", e.g. ".f01"
 
 
 # creates the individual
